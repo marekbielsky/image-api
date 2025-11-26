@@ -31,6 +31,8 @@ services:
       DATABASE_URL: postgres://postgres:postgres@db:5432/images
     ports:
       - '3000:3000'
+    env_file:
+      - .env
 
 volumes:
   db_data:
