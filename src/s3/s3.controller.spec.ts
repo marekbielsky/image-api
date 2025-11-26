@@ -5,7 +5,7 @@ import { S3Controller } from './s3.controller';
 import { S3Service } from './s3.service';
 
 describe('S3Controller', () => {
-  let controller: S3Controller;
+  let s3Controller: S3Controller;
   let s3Service: jest.Mocked<S3Service>;
 
   beforeEach(async () => {
@@ -23,7 +23,7 @@ describe('S3Controller', () => {
       ],
     }).compile();
 
-    controller = moduleRef.get(S3Controller);
+    s3Controller = moduleRef.get(S3Controller);
     s3Service = moduleRef.get(S3Service);
   });
 
@@ -36,7 +36,7 @@ describe('S3Controller', () => {
 
       s3Service.checkConnection.mockResolvedValue(new S3HealthResponseDto(serviceResult));
 
-      const result = await controller.health();
+      const result = await s3Controller.health();
 
       expect(s3Service.checkConnection).toHaveBeenCalledTimes(1);
       expect(result).toEqual(new S3HealthResponseDto({ status: 'ok', bucket: 'test-bucket' }));
@@ -45,7 +45,7 @@ describe('S3Controller', () => {
     it('should propagate errors from S3Service', async () => {
       s3Service.checkConnection.mockRejectedValue(new Error('S3 unavailable'));
 
-      await expect(controller.health()).rejects.toThrow('S3 unavailable');
+      await expect(s3Controller.health()).rejects.toThrow('S3 unavailable');
     });
   });
 });
