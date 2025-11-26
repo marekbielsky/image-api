@@ -4,10 +4,8 @@ services:
   db:
     image: postgres:16-alpine
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: images
+    env_file:
+      - .env
     ports:
       - '5432:5432'
     volumes:
@@ -22,17 +20,18 @@ services:
       - '8080:8080'
 
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
     depends_on:
       - db
-    environment:
-      NODE_ENV: production
-      DATABASE_URL: postgres://postgres:postgres@db:5432/images
-    ports:
-      - '3000:3000'
     env_file:
       - .env
+    environment:
+      NODE_ENV: production
+    ports:
+      - '3000:3000'
 
 volumes:
   db_data:
