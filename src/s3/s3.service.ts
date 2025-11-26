@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { HeadBucketCommand, S3Client } from '@aws-sdk/client-s3';
+import { S3HealthResponseDto } from '@app/s3/types';
 
 @Injectable()
 export class S3Service {
@@ -21,6 +22,7 @@ export class S3Service {
     }
 
     this.bucket = process.env.AWS_S3_BUCKET ?? '';
+
     if (!this.bucket) {
       throw new Error('Missing AWS_S3_BUCKET in environment.');
     }
@@ -36,10 +38,10 @@ export class S3Service {
     });
   }
 
-  public async checkConnection(): Promise<{ ok: boolean; bucket: string }> {
+  public async checkConnection(): Promise<S3HealthResponseDto> {
     try {
       await this.s3.send(new HeadBucketCommand({ Bucket: this.bucket }));
-      return { ok: true, bucket: this.bucket };
+      return { status: 'ok', bucket: this.bucket };
     } catch (error) {
       if (error instanceof Error) {
         this.logger.error(
