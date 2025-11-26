@@ -19,12 +19,13 @@ Built with **Prisma**, **PostgreSQL**, **Docker**, **Swagger**, and **GitHub Act
 - 🗄️ **Prisma ORM** with PostgreSQL
 - 🐳 **Dockerized environment** (API + DB + Adminer)
 - 🧭 **Swagger UI** auto-generated API documentation  
-  _→ available at [http://localhost:3000/docs](http://localhost:3000/docs) after container startup_
+  _→ available at [http://localhost:3000/api/v1/docs](http://localhost:3000/api/v1/docs) after container startup_
 - 🧹 **ESLint + Prettier** for consistent code quality
 - 🧪 **Unit testing** with Jest (`services`, `repositories`, and `controllers`)
 - 🤖 **GitHub Actions CI** (lint → test → typecheck → build)
 - 🔧 **Type checking** scripts for runtime and test code
 - ☁️ **AWS S3 integration** for file uploads
+- 🧱 **API versioning** (/api/v1/...) and global prefix configuration
 
 ---
 
@@ -67,8 +68,8 @@ Then update AWS and database settings as needed.
 
 After startup, you can access:
 
-- **API** → [http://localhost:3000](http://localhost:3000)
-- **Swagger docs** → [http://localhost:3000/docs](http://localhost:3000/docs)
+- **API** → [http://localhost:3000/api/v1](http://localhost:3000/api/v1)
+- **Swagger docs** → [http://localhost:3000/api/v1/docs](http://localhost:3000/api/v1/docs)
 - **Adminer (PostgreSQL UI)** → [http://localhost:8080](http://localhost:8080)
 
 ## 🧪 Testing & Type Checking
@@ -101,31 +102,31 @@ src/
 
 - DTOs / Types → define data contracts & Swagger docs
 
-## 📦 Endpoints
+## 📦 API Endpoints (v1)
 
 ### **Upload Image**
-`POST /images`
+`POST /api/v1/images`
 - Uploads and resizes an image
 - Stores metadata in the database and file in S3
 
 ---
 
 ### **Get All Images**
-`GET /images?title={query}&page=1&limit=10`
+`GET /api/v1/images?title={query}&page=1&limit=10`
 - Returns a paginated list of images
 - Supports optional filtering by `title`
 
 ---
 
 ### **Get Single Image**
-`GET /images/:id`
+`GET /api/v1/images/:id`
 - Returns metadata for a specific image
 
 ---
 
 ### **Health Checks**
-`GET /health`  
-`GET /s3/health`
+`GET /api/v1/health`  
+`GET /api/v1/s3/health`
 - Application and S3 connection health checks
 
 ## 🧾 Review Instructions

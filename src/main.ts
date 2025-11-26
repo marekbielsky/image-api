@@ -7,14 +7,10 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder()
-    .setTitle('Image API')
-    .setDescription('API for uploading and retrieving images')
-    .setVersion('1.0.0')
-    .build();
+  const v1Config = new DocumentBuilder().setTitle('Image API v1').setVersion('1.0').build();
+  const v1Document = SwaggerModule.createDocument(app, v1Config);
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/api/docs', app, document);
+  SwaggerModule.setup('api/v1/docs', app, v1Document);
 
   app.setGlobalPrefix('/api');
 
