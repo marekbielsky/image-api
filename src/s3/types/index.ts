@@ -1,1 +1,1 @@
-export * from './s3-upload.type';
+export * from './s3-upload.types';
