@@ -19,9 +19,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint 'src/**/*.ts' --fix",
-    "prisma:generate": "src/prisma generate",
-    "prisma:migrate": "src/prisma migrate dev",
-    "prisma:studio": "src/prisma studio"
+    "prisma:generate": "prisma generate --schema=src/prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate dev --schema=src/prisma/schema.prisma",
+    "prisma:studio": "prisma studio --schema=src/prisma/schema.prisma"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
