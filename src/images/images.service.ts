@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import sharp from 'sharp';
 
-import { FileUploadService } from '@app/file-upload/file-upload.service';
+import { S3Service } from '@app/s3/s3.service';
 
 import { CreateImageDto, GetImagesQueryDto } from './dtos';
 import { ImagesRepository } from './images.repository';
@@ -11,14 +11,14 @@ import { CreateImageEntityProps, FindImagesParams } from './types';
 @Injectable()
 export class ImagesService {
   public constructor(
-    private readonly fileUploadService: FileUploadService,
+    private readonly s3Service: S3Service,
     private readonly imagesRepository: ImagesRepository,
   ) {}
 
   public async create(file: Express.Multer.File, dto: CreateImageDto): Promise<ImageResponseDto> {
     const resizedBuffer = await sharp(file.buffer).resize(dto.width, dto.height).toBuffer();
 
-    const uploadResult = await this.fileUploadService.uploadImageFromBuffer({
+    const uploadResult = await this.s3Service.uploadObject({
       fileBuffer: resizedBuffer,
       contentType: file.mimetype,
       keyPrefix: 'images',

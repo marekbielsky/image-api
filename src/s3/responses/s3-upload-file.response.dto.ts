@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export interface UploadFileResponseProps {
+export interface S3UploadFileResponseProps {
   key: string;
   url: string;
   bucket: string;
 }
 
-export class UploadFileResponseDto {
+export class S3UploadFileResponseDto {
   @ApiProperty({
     example: 'images/3b7f3c01-0c6c-4cdb-9a96-123456789abc',
     description: 'Key of the stored object in S3',
@@ -26,7 +26,7 @@ export class UploadFileResponseDto {
   })
   public readonly bucket!: string;
 
-  public constructor(props: UploadFileResponseProps) {
+  public constructor(props: S3UploadFileResponseProps) {
     Object.assign(this, props);
   }
 }

@@ -6,7 +6,8 @@ export interface ImageFileOptions {
   required?: boolean;
 }
 
-const DEFAULT_IMAGE_MIME_TYPES: string[] = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const DEFAULT_IMAGE_MAX_SIZE = 5 * 1024 * 1024;
+const DEFAULT_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 export const ImageFile = createParamDecorator(
   (options: ImageFileOptions | undefined, ctx: ExecutionContext) => {
@@ -14,7 +15,7 @@ export const ImageFile = createParamDecorator(
     const file: Express.Multer.File | undefined = request.file;
 
     const {
-      maxSizeBytes = 5 * 1024 * 1024,
+      maxSizeBytes = DEFAULT_IMAGE_MAX_SIZE,
       mimeTypes = DEFAULT_IMAGE_MIME_TYPES,
       required = true,
     } = options ?? {};

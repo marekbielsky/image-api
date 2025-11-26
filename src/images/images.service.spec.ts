@@ -4,8 +4,7 @@ import { Test } from '@nestjs/testing';
 import { ImagesRepository } from '@app/images/images.repository';
 import { PrismaModule } from '@app/prisma/prisma.module';
 import { S3Module } from '@app/s3/s3.module';
-
-import { FileUploadService } from '../file-upload/file-upload.service';
+import { S3Service } from '@app/s3/s3.service';
 
 import { ImagesMockFactory } from './mocks/images-mock.factory';
 import { CreateImageDto, GetImagesQueryDto } from './dtos';
@@ -27,17 +26,17 @@ jest.mock('sharp', () => {
 describe('ImagesService', () => {
   let imagesService: ImagesService;
   let imagesRepository: ImagesRepository;
-  let fileUploadService: FileUploadService;
+  let s3Service: S3Service;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [PrismaModule, S3Module],
-      providers: [ImagesService, ImagesRepository, FileUploadService],
+      providers: [ImagesService, ImagesRepository],
     }).compile();
 
     imagesService = moduleRef.get<ImagesService>(ImagesService);
     imagesRepository = moduleRef.get<ImagesRepository>(ImagesRepository);
-    fileUploadService = moduleRef.get<FileUploadService>(FileUploadService);
+    s3Service = moduleRef.get<S3Service>(S3Service);
   });
 
   describe('create', () => {
@@ -53,7 +52,7 @@ describe('ImagesService', () => {
 
       const dto = new CreateImageDto(title, width, height);
 
-      jest.spyOn(fileUploadService, 'uploadImageFromBuffer').mockResolvedValue({
+      jest.spyOn(s3Service, 'uploadObject').mockResolvedValue({
         key: 'images/test-key',
         url: 'https://bucket.s3.region.amazonaws.com/images/test-key',
         bucket: 'bucket',
@@ -76,7 +75,7 @@ describe('ImagesService', () => {
 
       const result = await imagesService.create(file, dto);
 
-      expect(fileUploadService.uploadImageFromBuffer).toHaveBeenCalledWith(
+      expect(s3Service.uploadObject).toHaveBeenCalledWith(
         expect.objectContaining({
           contentType: file.mimetype,
           keyPrefix: 'images',

@@ -1,8 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
-import { FileUploadModule } from '@app/file-upload/file-upload.module';
 import { PrismaModule } from '@app/prisma/prisma.module';
+import { S3Module } from '@app/s3/s3.module';
 
 import { ImagesMockFactory } from './mocks/images-mock.factory';
 import { CreateImageDto, GetImagesQueryDto } from './dtos';
@@ -16,7 +16,7 @@ describe('ImagesController', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [PrismaModule, FileUploadModule],
+      imports: [PrismaModule, S3Module],
       controllers: [ImagesController],
       providers: [ImagesService, ImagesRepository],
     }).compile();
