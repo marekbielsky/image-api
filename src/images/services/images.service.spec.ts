@@ -2,6 +2,11 @@ import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
 import { ImagesRepository } from '@app/images/repositories/images.repository';
+import { DefaultEncodingStrategy } from '@app/images/strategies/default-encoding.strategy';
+import { GifEncodingStrategy } from '@app/images/strategies/gif-encoding.strategy';
+import { JpegEncodingStrategy } from '@app/images/strategies/jpeg-encoding.strategy';
+import { PngEncodingStrategy } from '@app/images/strategies/png-encoding.strategy';
+import { WebpEncodingStrategy } from '@app/images/strategies/webp-encoding.strategy';
 import { PrismaModule } from '@app/prisma/prisma.module';
 import { S3Module } from '@app/s3/s3.module';
 import { S3Service } from '@app/s3/services/s3.service';
@@ -14,7 +19,12 @@ import { ImagesService } from './images.service';
 
 jest.mock('sharp', () => {
   const sharpMock = jest.fn(() => ({
+    rotate: jest.fn().mockReturnThis(),
     resize: jest.fn().mockReturnThis(),
+    jpeg: jest.fn().mockReturnThis(),
+    png: jest.fn().mockReturnThis(),
+    webp: jest.fn().mockReturnThis(),
+    gif: jest.fn().mockReturnThis(),
     toBuffer: jest.fn().mockResolvedValue(Buffer.from('resized-buffer')),
   }));
 
@@ -32,7 +42,15 @@ describe('ImagesService', () => {
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [PrismaModule, S3Module],
-      providers: [ImagesService, ImagesRepository],
+      providers: [
+        JpegEncodingStrategy,
+        PngEncodingStrategy,
+        WebpEncodingStrategy,
+        GifEncodingStrategy,
+        DefaultEncodingStrategy,
+        ImagesService,
+        ImagesRepository,
+      ],
     }).compile();
 
     imagesService = moduleRef.get<ImagesService>(ImagesService);

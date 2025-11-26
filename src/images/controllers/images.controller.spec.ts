@@ -1,6 +1,11 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
+import { DefaultEncodingStrategy } from '@app/images/strategies/default-encoding.strategy';
+import { GifEncodingStrategy } from '@app/images/strategies/gif-encoding.strategy';
+import { JpegEncodingStrategy } from '@app/images/strategies/jpeg-encoding.strategy';
+import { PngEncodingStrategy } from '@app/images/strategies/png-encoding.strategy';
+import { WebpEncodingStrategy } from '@app/images/strategies/webp-encoding.strategy';
 import { PrismaModule } from '@app/prisma/prisma.module';
 import { S3Module } from '@app/s3/s3.module';
 
@@ -19,7 +24,15 @@ describe('ImagesController', () => {
     const moduleRef = await Test.createTestingModule({
       imports: [PrismaModule, S3Module],
       controllers: [ImagesController],
-      providers: [ImagesService, ImagesRepository],
+      providers: [
+        JpegEncodingStrategy,
+        PngEncodingStrategy,
+        WebpEncodingStrategy,
+        GifEncodingStrategy,
+        DefaultEncodingStrategy,
+        ImagesService,
+        ImagesRepository,
+      ],
     }).compile();
 
     imagesController = moduleRef.get<ImagesController>(ImagesController);
