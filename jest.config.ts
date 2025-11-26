@@ -9,5 +9,5 @@ module.exports = {
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
-  setupFiles: ['<rootDir>/test/jest.setup.ts'],
+  setupFiles: ['<rootDir>/jest.setup.ts'],
 };
