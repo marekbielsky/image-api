@@ -1,19 +1,18 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
-import { ImagesRepository } from '@app/images/repositories/images.repository';
-import { DefaultEncodingStrategy } from '@app/images/strategies/default-encoding.strategy';
-import { GifEncodingStrategy } from '@app/images/strategies/gif-encoding.strategy';
-import { JpegEncodingStrategy } from '@app/images/strategies/jpeg-encoding.strategy';
-import { PngEncodingStrategy } from '@app/images/strategies/png-encoding.strategy';
-import { WebpEncodingStrategy } from '@app/images/strategies/webp-encoding.strategy';
-import { PrismaModule } from '@app/prisma/prisma.module';
 import { S3Module } from '@app/s3/s3.module';
 import { S3Service } from '@app/s3/services/s3.service';
 
 import { CreateImageDto, GetImagesQueryDto } from '../dtos';
 import { ImagesMockFactory } from '../mocks/images-mock.factory';
+import { ImagesRepository } from '../repositories/images.repository';
 import { ImageResponseProps } from '../responses';
+import { DefaultEncodingStrategy } from '../strategies/default-encoding.strategy';
+import { GifEncodingStrategy } from '../strategies/gif-encoding.strategy';
+import { JpegEncodingStrategy } from '../strategies/jpeg-encoding.strategy';
+import { PngEncodingStrategy } from '../strategies/png-encoding.strategy';
+import { WebpEncodingStrategy } from '../strategies/webp-encoding.strategy';
 
 import { ImagesService } from './images.service';
 
@@ -28,20 +27,17 @@ jest.mock('sharp', () => {
     toBuffer: jest.fn().mockResolvedValue(Buffer.from('resized-buffer')),
   }));
 
-  return {
-    __esModule: true,
-    default: sharpMock,
-  };
+  return { __esModule: true, default: sharpMock };
 });
 
 describe('ImagesService', () => {
   let imagesService: ImagesService;
-  let imagesRepository: ImagesRepository;
-  let s3Service: S3Service;
+  let imagesRepository: jest.Mocked<ImagesRepository>;
+  let s3Service: jest.Mocked<S3Service>;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [PrismaModule, S3Module],
+      imports: [S3Module],
       providers: [
         JpegEncodingStrategy,
         PngEncodingStrategy,
@@ -51,11 +47,22 @@ describe('ImagesService', () => {
         ImagesService,
         ImagesRepository,
       ],
-    }).compile();
+    })
+      .overrideProvider(ImagesRepository)
+      .useValue({
+        create: jest.fn(),
+        findMany: jest.fn(),
+        findById: jest.fn(),
+      })
+      .overrideProvider(S3Service)
+      .useValue({
+        uploadObject: jest.fn(),
+      })
+      .compile();
 
-    imagesService = moduleRef.get<ImagesService>(ImagesService);
-    imagesRepository = moduleRef.get<ImagesRepository>(ImagesRepository);
-    s3Service = moduleRef.get<S3Service>(S3Service);
+    imagesService = moduleRef.get(ImagesService);
+    imagesRepository = moduleRef.get(ImagesRepository) as jest.Mocked<ImagesRepository>;
+    s3Service = moduleRef.get(S3Service) as jest.Mocked<S3Service>;
   });
 
   describe('create', () => {
@@ -65,13 +72,9 @@ describe('ImagesService', () => {
         mimetype: 'image/png',
       } as Express.Multer.File;
 
-      const title = 'Test Image';
-      const width = 800;
-      const height = 600;
+      const dto = new CreateImageDto('Test Image', 800, 600);
 
-      const dto = new CreateImageDto(title, width, height);
-
-      jest.spyOn(s3Service, 'uploadObject').mockResolvedValue({
+      s3Service.uploadObject.mockResolvedValue({
         key: 'images/test-key',
         url: 'https://bucket.s3.region.amazonaws.com/images/test-key',
         bucket: 'bucket',
@@ -90,7 +93,7 @@ describe('ImagesService', () => {
         updatedAt,
       });
 
-      jest.spyOn(imagesRepository, 'create').mockResolvedValue(mockImageEntity);
+      imagesRepository.create.mockResolvedValue(mockImageEntity);
 
       const result = await imagesService.create(file, dto);
 
@@ -123,11 +126,10 @@ describe('ImagesService', () => {
   describe('findMany', () => {
     it('should use default pagination when no page/limit provided', async () => {
       const query = new GetImagesQueryDto();
-
       const mockImageEntity = ImagesMockFactory.getMockEntity();
       const mockImageEntities = [mockImageEntity];
 
-      jest.spyOn(imagesRepository, 'findMany').mockResolvedValue(mockImageEntities);
+      imagesRepository.findMany.mockResolvedValue(mockImageEntities);
 
       const result = await imagesService.findMany(query);
 
@@ -154,9 +156,7 @@ describe('ImagesService', () => {
         url: 'https://example.com/2.jpg',
       });
 
-      const mockImageEntities = [mockImageEntity];
-
-      jest.spyOn(imagesRepository, 'findMany').mockResolvedValue(mockImageEntities);
+      imagesRepository.findMany.mockResolvedValue([mockImageEntity]);
 
       const result = await imagesService.findMany(query);
 
@@ -180,7 +180,7 @@ describe('ImagesService', () => {
         url: 'https://example.com/img.jpg',
       });
 
-      jest.spyOn(imagesRepository, 'findById').mockResolvedValue(mockImageEntity);
+      imagesRepository.findById.mockResolvedValue(mockImageEntity);
 
       const result = await imagesService.findOne('123');
 
@@ -190,7 +190,7 @@ describe('ImagesService', () => {
     });
 
     it('should throw NotFoundException when image does not exist', async () => {
-      jest.spyOn(imagesRepository, 'findById').mockResolvedValue(null);
+      imagesRepository.findById.mockResolvedValue(null);
 
       await expect(imagesService.findOne('missing-id')).rejects.toBeInstanceOf(NotFoundException);
     });
