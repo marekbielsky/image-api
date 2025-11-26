@@ -1,5 +1,5 @@
 import { HeadBucketCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Injectable, InternalServerErrorException, Logger, Optional } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
 import { S3HealthResponseDto, S3UploadFileResponseDto } from '../responses';
@@ -10,18 +10,7 @@ export class S3Service {
   private readonly bucket: string;
   private readonly logger = new Logger(S3Service.name);
 
-  public constructor(
-    @Optional()
-    private readonly s3: S3Client = new S3Client({
-      region: process.env.AWS_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
-      },
-      endpoint: process.env.AWS_ENDPOINT,
-      forcePathStyle: process.env.AWS_FORCE_PATH_STYLE === 'true',
-    }),
-  ) {
+  public constructor(private readonly s3: S3Client) {
     this.bucket = process.env.AWS_S3_BUCKET ?? '';
     if (!this.bucket) throw new Error('Missing AWS_S3_BUCKET in environment.');
   }
