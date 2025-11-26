@@ -68,7 +68,7 @@ describe('ImagesRepository', () => {
       };
 
       const mockImageEntity = ImagesMockFactory.getMockEntity();
-      const mockImageEntities: Image[] = [mockImageEntity];
+      const mockImageEntities = [mockImageEntity];
 
       jest.spyOn(prismaService.image, 'findMany').mockResolvedValue(mockImageEntities);
 
