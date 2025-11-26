@@ -1,10 +1,12 @@
-import { ImagesRepository } from './images.repository';
-import { Image } from '@prisma/client';
-import { CreateImageEntityProps, FindImagesParams } from './types';
 import { Test } from '@nestjs/testing';
+import { Image } from '@prisma/client';
+
+import { ImagesMockFactory } from '@app/images/mocks/images-mock.factory';
 import { PrismaModule } from '@app/prisma/prisma.module';
 import { PrismaService } from '@app/prisma/prisma.service';
-import { ImagesMockFactory } from '@app/images/mocks/images-mock.factory';
+
+import { ImagesRepository } from './images.repository';
+import { CreateImageEntityProps, FindImagesParams } from './types';
 
 describe('ImagesRepository', () => {
   let imagesRepository: ImagesRepository;

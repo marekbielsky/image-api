@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import sharp from 'sharp';
-import { ImagesRepository } from './images.repository';
-import { CreateImageDto, GetImagesQueryDto } from './dtos';
-import { ImageResponseDto } from './responses';
+
 import { FileUploadService } from '@app/file-upload/file-upload.service';
+
+import { CreateImageDto, GetImagesQueryDto } from './dtos';
+import { ImagesRepository } from './images.repository';
+import { ImageResponseDto } from './responses';
 import { CreateImageEntityProps, FindImagesParams } from './types';
 
 @Injectable()

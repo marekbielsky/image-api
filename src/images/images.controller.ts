@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Post, Body, UseInterceptors, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBody,
   ApiConsumes,
@@ -7,11 +8,12 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+
+import { ApiImageFile, ImageFile } from '@app/common';
+
+import { CreateImageDto, GetImagesQueryDto } from './dtos';
 import { ImagesService } from './images.service';
 import { ImageResponseDto } from './responses';
-import { CreateImageDto, GetImagesQueryDto } from './dtos';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiImageFile, ImageFile } from '@app/common';
 
 @ApiTags('/images')
 @Controller('/images')

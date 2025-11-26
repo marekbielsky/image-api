@@ -1,4 +1,5 @@
 import { Image } from '@prisma/client';
+
 import { ImageResponseDto } from '../responses';
 
 const defaultMockImageEntity: Image = {

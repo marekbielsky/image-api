@@ -1,12 +1,14 @@
-import { Test } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
-import { ImagesController } from './images.controller';
-import { ImagesService } from './images.service';
-import { CreateImageDto, GetImagesQueryDto } from './dtos';
+import { Test } from '@nestjs/testing';
+
 import { FileUploadModule } from '@app/file-upload/file-upload.module';
-import { ImagesRepository } from './images.repository';
-import { ImagesMockFactory } from './mocks/images-mock.factory';
 import { PrismaModule } from '@app/prisma/prisma.module';
+
+import { ImagesMockFactory } from './mocks/images-mock.factory';
+import { CreateImageDto, GetImagesQueryDto } from './dtos';
+import { ImagesController } from './images.controller';
+import { ImagesRepository } from './images.repository';
+import { ImagesService } from './images.service';
 
 describe('ImagesController', () => {
   let imagesController: ImagesController;
