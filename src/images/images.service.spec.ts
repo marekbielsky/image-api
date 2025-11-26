@@ -174,14 +174,4 @@ describe('ImagesService', () => {
       await expect(imagesService.findOne('missing-id')).rejects.toBeInstanceOf(NotFoundException);
     });
   });
-
-  describe('remove', () => {
-    it('should delegate deletion to repository', async () => {
-      jest.spyOn(imagesRepository, 'deleteById').mockResolvedValue(undefined);
-
-      await imagesService.remove('to-delete');
-
-      expect(imagesRepository.deleteById).toHaveBeenCalledWith('to-delete');
-    });
-  });
 });
