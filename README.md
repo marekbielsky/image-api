@@ -1,5 +1,6 @@
 # 🖼️ Image API
 
+[![CI](https://github.com/marekbielsky/image-api/actions/workflows/ci.yml/badge.svg)](https://github.com/marekbielsky/image-api/actions/workflows/ci.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-24.11.1_LTS-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![NestJS](https://img.shields.io/badge/NestJS-Framework-ea2845?logo=nestjs)](https://nestjs.com/)
 [![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
@@ -8,20 +9,20 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 A **NestJS-based REST API** for uploading and serving images.  
-Built with **Prisma**, **PostgreSQL**, **Docker**, and **Swagger** for auto-generated API documentation.
+Built with **Prisma**, **PostgreSQL**, **Docker**, **Swagger**, and **GitHub Actions CI** for automated testing and linting.
 
 ---
 
 ## 🚀 Features
 
-- ⚙️ NestJS (latest LTS)
-- 🗄️ Prisma ORM with PostgreSQL
-- 🐳 Dockerized database setup
-- 🧭 Adminer GUI for database management
-- 📘 Swagger UI for API documentation
-- 🧹 ESLint + Prettier setup
-- 🧪 Ready for unit & E2E testing
-- 🔧 CI/CD-ready architecture
+- ⚙️ **NestJS** (latest LTS)
+- 🗄️ **Prisma ORM** with PostgreSQL
+- 🐳 **Dockerized environment** (API + DB + Adminer)
+- 🧭 **Swagger UI** auto-generated API documentation
+- 🧹 **ESLint + Prettier** for code quality
+- 🧪 **Jest testing** ready (with `--passWithNoTests` for initial setup)
+- 🤖 **GitHub Actions CI** pipeline (lint → test → build)
+- 🔧 CI and Docker integration ready for deployment pipelines
 
 ---
 
@@ -29,7 +30,7 @@ Built with **Prisma**, **PostgreSQL**, **Docker**, and **Swagger** for auto-gene
 
 - **Node.js** → `v24.11.1 (LTS)`
 - **npm** → `>= 10`
-- **Docker** & **Docker Compose`
+- **Docker** & **Docker Compose**
 
 ---
 
@@ -38,6 +39,6 @@ Built with **Prisma**, **PostgreSQL**, **Docker**, and **Swagger** for auto-gene
 ### 1️⃣ Clone & install dependencies
 
 ```bash
-git clone https://github.com/marek-bielski/image-api.git
+git clone https://github.com/marekbielsky/image-api.git
 cd image-api
 npm install
