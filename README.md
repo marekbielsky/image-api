@@ -1,21 +1,41 @@
-# Image API
+# 🖼️ Image API
 
-A NestJS-based image upload API with:
+[![Node.js](https://img.shields.io/badge/Node.js-24.11.1_LTS-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![NestJS](https://img.shields.io/badge/NestJS-Framework-ea2845?logo=nestjs)](https://nestjs.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-- AWS S3 / MinIO storage
-- Prisma + PostgreSQL
-- Docker + docker-compose
-- Unit and integration tests
-- CI/CD with GitHub Actions
+A **NestJS-based REST API** for uploading and serving images.  
+Built with **Prisma**, **PostgreSQL**, and **Docker** — including an **Adminer UI** for managing your database.
 
-## Requirements
+---
 
-- Node.js **v24.11.1 (LTS)**
-- npm **>= 10**
-- Docker & Docker Compose (for local infra)
+## 🚀 Features
 
-## Getting started
+- ⚙️ NestJS (latest LTS)
+- 🗄️ Prisma ORM with PostgreSQL
+- 🐳 Dockerized database setup
+- 🧭 Adminer GUI for database management
+- 🧹 ESLint + Prettier setup
+- 🧪 Ready for unit & E2E testing
+- 🔧 CI/CD-ready architecture
+
+---
+
+## 🧰 Requirements
+
+- **Node.js** → `v24.11.1 (LTS)`
+- **npm** → `>= 10`
+- **Docker** & **Docker Compose**
+
+---
+
+## ⚙️ Setup
+
+### 1️⃣ Clone & install dependencies
 
 ```bash
+git clone https://github.com/marekbielsky/image-api.git
+cd image-api
 npm install
-npm run start:dev
