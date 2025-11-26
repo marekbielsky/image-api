@@ -8,11 +8,11 @@ export class HealthController {
   @Get('/')
   @ApiOkResponse({ type: HealthResponseDto })
   public health(): HealthResponseDto {
-    const status = 'ok';
-    const timestamp = new Date().toISOString();
-    const service = 'image-api';
-    const version = process.env.npm_package_version ?? 'unknown';
-
-    return new HealthResponseDto(status, timestamp, service, version);
+    return new HealthResponseDto({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      service: 'image-api',
+      version: process.env.npm_package_version ?? 'unknown',
+    });
   }
 }

@@ -1,8 +1,8 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { HeadBucketCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { randomUUID } from 'crypto';
-import { S3HealthResponseDto } from 'src/s3/responses';
-import { S3UploadOptions, S3UploadResult } from '@app/s3/types';
+import { S3UploadOptions, S3UploadResult } from './types';
+import { S3HealthResponseDto } from './responses';
 
 @Injectable()
 export class S3Service {
@@ -44,7 +44,10 @@ export class S3Service {
     try {
       await this.s3.send(new HeadBucketCommand({ Bucket: this.bucket }));
 
-      return new S3HealthResponseDto('ok', this.bucket);
+      return new S3HealthResponseDto({
+        status: 'ok',
+        bucket: this.bucket,
+      });
     } catch (error) {
       this.handleError(
         error,

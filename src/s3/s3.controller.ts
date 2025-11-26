@@ -13,6 +13,6 @@ export class S3Controller {
   public async health(): Promise<S3HealthResponseDto> {
     const result = await this.s3Service.checkConnection();
 
-    return new S3HealthResponseDto('ok', result.bucket);
+    return new S3HealthResponseDto({ status: 'ok', bucket: result.bucket });
   }
 }

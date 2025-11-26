@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { S3Service } from '../s3/s3.service';
 import { UploadFileResponseDto } from './responses';
 import { FileUploadMapper } from './file-upload.mapper';
+import { S3Service } from '@app/s3/s3.service';
 
 @Injectable()
 export class FileUploadService {

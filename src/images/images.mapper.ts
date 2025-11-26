@@ -3,15 +3,7 @@ import { ImageResponseDto } from './responses';
 
 export class ImagesMapper {
   public static toResponseDto(entity: Image): ImageResponseDto {
-    return new ImageResponseDto(
-      entity.id,
-      entity.title,
-      entity.url,
-      entity.width,
-      entity.height,
-      entity.createdAt,
-      entity.updatedAt,
-    );
+    return new ImageResponseDto(entity);
   }
 
   public static toResponseDtoList(entities: Image[]): ImageResponseDto[] {

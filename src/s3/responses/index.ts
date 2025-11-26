@@ -1,1 +1,1 @@
-export * from './s3-health-response.dto';
+export * from './s3-health.response.dto';
