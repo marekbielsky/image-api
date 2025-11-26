@@ -23,7 +23,11 @@
     "prisma:migrate": "prisma migrate dev --schema=src/prisma/schema.prisma",
     "prisma:studio": "prisma studio --schema=src/prisma/schema.prisma",
     "typecheck": "tsc --noEmit",
-    "typecheck:test": "tsc --noEmit -p tsconfig.spec.json"
+    "typecheck:test": "tsc --noEmit -p tsconfig.spec.json",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down --remove-orphans",
+    "docker:rebuild": "docker compose up -d --build",
+    "docker:rebuild:full": "docker compose down --volumes --remove-orphans && docker compose build --no-cache && docker compose up -d"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.940.0",
