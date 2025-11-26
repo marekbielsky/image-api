@@ -11,9 +11,9 @@ import {
 
 import { ApiImageFile, ImageFile } from '@app/common';
 
-import { CreateImageDto, GetImagesQueryDto } from './dtos';
-import { ImagesService } from './images.service';
-import { ImageResponseDto } from './responses';
+import { CreateImageDto, GetImagesQueryDto } from '../dtos';
+import { ImageResponseDto } from '../responses';
+import { ImagesService } from '../services/images.service';
 
 @ApiTags('/images')
 @Controller('/images')

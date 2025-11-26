@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import sharp from 'sharp';
 
-import { S3Service } from '@app/s3/s3.service';
+import { S3Service } from '@app/s3/services/s3.service';
 
-import { CreateImageDto, GetImagesQueryDto } from './dtos';
-import { ImagesRepository } from './images.repository';
-import { ImageResponseDto } from './responses';
-import { CreateImageEntityProps, FindImagesParams } from './types';
+import { CreateImageDto, GetImagesQueryDto } from '../dtos';
+import { ImagesRepository } from '../repositories/images.repository';
+import { ImageResponseDto } from '../responses';
+import { CreateImageEntityProps, FindImagesParams } from '../types';
 
 @Injectable()
 export class ImagesService {

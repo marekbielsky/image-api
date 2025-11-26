@@ -4,11 +4,12 @@ import { Test } from '@nestjs/testing';
 import { PrismaModule } from '@app/prisma/prisma.module';
 import { S3Module } from '@app/s3/s3.module';
 
-import { ImagesMockFactory } from './mocks/images-mock.factory';
-import { CreateImageDto, GetImagesQueryDto } from './dtos';
+import { CreateImageDto, GetImagesQueryDto } from '../dtos';
+import { ImagesMockFactory } from '../mocks/images-mock.factory';
+import { ImagesRepository } from '../repositories/images.repository';
+import { ImagesService } from '../services/images.service';
+
 import { ImagesController } from './images.controller';
-import { ImagesRepository } from './images.repository';
-import { ImagesService } from './images.service';
 
 describe('ImagesController', () => {
   let imagesController: ImagesController;

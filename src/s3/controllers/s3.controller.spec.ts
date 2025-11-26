@@ -1,8 +1,9 @@
 import { Test } from '@nestjs/testing';
 
-import { S3HealthResponseDto, S3HealthResponseProps } from './responses';
+import { S3HealthResponseDto, S3HealthResponseProps } from '../responses';
+import { S3Service } from '../services/s3.service';
+
 import { S3Controller } from './s3.controller';
-import { S3Service } from './s3.service';
 
 describe('S3Controller', () => {
   let s3Controller: S3Controller;

@@ -2,8 +2,8 @@ import { HeadBucketCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s
 import { Injectable, InternalServerErrorException, Logger, Optional } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
-import { S3HealthResponseDto, S3UploadFileResponseDto } from './responses';
-import { S3UploadOptions } from './types';
+import { S3HealthResponseDto, S3UploadFileResponseDto } from '../responses';
+import { S3UploadOptions } from '../types';
 
 @Injectable()
 export class S3Service {

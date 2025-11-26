@@ -1,15 +1,16 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
-import { ImagesRepository } from '@app/images/images.repository';
+import { ImagesRepository } from '@app/images/repositories/images.repository';
 import { PrismaModule } from '@app/prisma/prisma.module';
 import { S3Module } from '@app/s3/s3.module';
-import { S3Service } from '@app/s3/s3.service';
+import { S3Service } from '@app/s3/services/s3.service';
 
-import { ImagesMockFactory } from './mocks/images-mock.factory';
-import { CreateImageDto, GetImagesQueryDto } from './dtos';
+import { CreateImageDto, GetImagesQueryDto } from '../dtos';
+import { ImagesMockFactory } from '../mocks/images-mock.factory';
+import { ImageResponseProps } from '../responses';
+
 import { ImagesService } from './images.service';
-import { ImageResponseProps } from './responses';
 
 jest.mock('sharp', () => {
   const sharpMock = jest.fn(() => ({

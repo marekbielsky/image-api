@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
-import { S3HealthResponseDto } from './responses';
-import { S3Service } from './s3.service';
+import { S3HealthResponseDto } from '../responses';
+import { S3Service } from '../services/s3.service';
 
 @ApiTags('/s3')
 @Controller('/s3')

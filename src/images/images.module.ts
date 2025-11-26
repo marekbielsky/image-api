@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { ImagesController } from './images.controller';
-import { ImagesRepository } from './images.repository';
-import { ImagesService } from './images.service';
+import { ImagesController } from './controllers/images.controller';
+import { ImagesRepository } from './repositories/images.repository';
+import { ImagesService } from './services/images.service';
 
 @Module({
   controllers: [ImagesController],
