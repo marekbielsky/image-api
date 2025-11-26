@@ -10,14 +10,7 @@ export class ImagesRepository {
   public constructor(private readonly prisma: PrismaService) {}
 
   public async create(data: CreateImageEntityProps): Promise<Image> {
-    return this.prisma.image.create({
-      data: {
-        title: data.title,
-        url: data.url,
-        width: data.width,
-        height: data.height,
-      },
-    });
+    return this.prisma.image.create({ data });
   }
 
   public async findMany(params: FindImagesParams): Promise<Image[]> {
