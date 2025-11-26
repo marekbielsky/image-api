@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Delete, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Delete, UseInterceptors, Query } from '@nestjs/common';
 import {
   ApiBody,
   ApiConsumes,
@@ -9,7 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { ImagesService } from './images.service';
 import { ImageResponseDto } from './responses';
-import { CreateImageDto } from './dtos';
+import { CreateImageDto, GetImagesQueryDto } from './dtos';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiImageFile, ImageFile } from '@app/common';
 
@@ -45,8 +45,8 @@ export class ImagesController {
 
   @Get('/')
   @ApiOkResponse({ type: ImageResponseDto, isArray: true })
-  public async findAll(): Promise<ImageResponseDto[]> {
-    return this.imagesService.findAll();
+  public async findMany(@Query() query: GetImagesQueryDto): Promise<ImageResponseDto[]> {
+    return this.imagesService.findMany(query);
   }
 
   @Get('/:id')

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import sharp from 'sharp';
-import { CreateImageEntityProps, ImagesRepository } from './images.repository';
-import { CreateImageDto } from './dtos';
+import { CreateImageEntityProps, FindImagesParams, ImagesRepository } from './images.repository';
+import { CreateImageDto, GetImagesQueryDto } from './dtos';
 import { ImageResponseDto } from './responses';
 import { ImagesMapper } from './images.mapper';
 import { FileUploadService } from '@app/file-upload/file-upload.service';
@@ -33,8 +33,17 @@ export class ImagesService {
     return ImagesMapper.toResponseDto(entity);
   }
 
-  public async findAll(): Promise<ImageResponseDto[]> {
-    const entities = await this.imagesRepository.findAll();
+  public async findMany(query: GetImagesQueryDto): Promise<ImageResponseDto[]> {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+
+    const params: FindImagesParams = {
+      title: query.title,
+      page,
+      limit,
+    };
+
+    const entities = await this.imagesRepository.findMany(params);
     return ImagesMapper.toResponseDtoList(entities);
   }
 
