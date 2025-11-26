@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import sharp from 'sharp';
 
-import { ImageEncodingResult, ImageEncodingStrategy } from '../types/image-encoding.strategy.types';
+import { ImageEncodingResult, ImageEncodingStrategy } from './types';
 
 @Injectable()
 export class WebpEncodingStrategy implements ImageEncodingStrategy {

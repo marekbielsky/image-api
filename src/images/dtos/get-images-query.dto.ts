@@ -2,7 +2,13 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
-export class GetImagesQueryDto {
+export interface GetImagesQueryProps {
+  title?: string;
+  page?: number;
+  limit?: number;
+}
+
+export class GetImagesQueryDto implements GetImagesQueryProps {
   @ApiPropertyOptional({
     description: 'Filter images where title contains this text (case-insensitive).',
     example: 'sunset',
@@ -34,4 +40,8 @@ export class GetImagesQueryDto {
   @Min(1)
   @Max(100)
   public limit?: number = 10;
+
+  public constructor(props: GetImagesQueryProps) {
+    Object.assign(this, props);
+  }
 }

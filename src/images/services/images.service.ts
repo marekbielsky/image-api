@@ -5,14 +5,14 @@ import { S3Service } from '@app/s3/services/s3.service';
 
 import { CreateImageDto, GetImagesQueryDto } from '../dtos';
 import { ImagesRepository } from '../repositories/images.repository';
+import { FindImagesParams } from '../repositories/types/images.repository.types';
 import { ImageResponseDto } from '../responses';
 import { DefaultEncodingStrategy } from '../strategies/default-encoding.strategy';
 import { GifEncodingStrategy } from '../strategies/gif-encoding.strategy';
 import { JpegEncodingStrategy } from '../strategies/jpeg-encoding.strategy';
 import { PngEncodingStrategy } from '../strategies/png-encoding.strategy';
+import { ImageEncodingResult, ImageEncodingStrategy } from '../strategies/types';
 import { WebpEncodingStrategy } from '../strategies/webp-encoding.strategy';
-import { FindImagesParams } from '../types';
-import { ImageEncodingResult, ImageEncodingStrategy } from '../types/image-encoding.strategy.types';
 
 @Injectable()
 export class ImagesService {

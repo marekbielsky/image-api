@@ -72,7 +72,7 @@ describe('ImagesService', () => {
         mimetype: 'image/png',
       } as Express.Multer.File;
 
-      const dto = new CreateImageDto('Test Image', 800, 600);
+      const dto = new CreateImageDto({ title: 'Test Image', width: 800, height: 600 });
 
       s3Service.uploadObject.mockResolvedValue({
         key: 'images/test-key',
@@ -125,7 +125,7 @@ describe('ImagesService', () => {
 
   describe('findMany', () => {
     it('should use default pagination when no page/limit provided', async () => {
-      const query = new GetImagesQueryDto();
+      const query = new GetImagesQueryDto({});
       const mockImageEntity = ImagesMockFactory.getMockEntity();
       const mockImageEntities = [mockImageEntity];
 
@@ -145,10 +145,7 @@ describe('ImagesService', () => {
     });
 
     it('should pass title filter and pagination to repository', async () => {
-      const query = new GetImagesQueryDto();
-      query.title = 'cat';
-      query.page = 2;
-      query.limit = 5;
+      const query = new GetImagesQueryDto({ title: 'cat', page: 2, limit: 5 });
 
       const mockImageEntity = ImagesMockFactory.getMockEntity({
         id: '2',

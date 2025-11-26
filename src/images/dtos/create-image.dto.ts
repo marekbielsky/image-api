@@ -3,17 +3,23 @@ import { IsNumber, IsPositive, IsString, Max, Min } from 'class-validator';
 
 import { AspectRatio } from '@app/common';
 
-export class CreateImageDto {
+export interface CreateImageProps {
+  title: string;
+  width: number;
+  height: number;
+}
+
+export class CreateImageDto implements CreateImageProps {
   @ApiProperty({ example: 'Sunset over the mountains' })
   @IsString()
-  public readonly title: string;
+  public readonly title!: string;
 
   @ApiProperty({ example: 1920 })
   @IsNumber()
   @IsPositive()
   @Min(50)
   @Max(5000)
-  public readonly width: number;
+  public readonly width!: number;
 
   @ApiProperty({ example: 1080 })
   @IsNumber()
@@ -25,11 +31,9 @@ export class CreateImageDto {
     max: 4,
     message: 'Unreasonable aspect ratio (too wide or too tall)',
   })
-  public readonly height: number;
+  public readonly height!: number;
 
-  public constructor(title: string, width: number, height: number) {
-    this.title = title;
-    this.width = width;
-    this.height = height;
+  public constructor(props: CreateImageProps) {
+    Object.assign(this, props);
   }
 }

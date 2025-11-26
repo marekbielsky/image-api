@@ -5,7 +5,7 @@ export interface S3HealthResponseProps {
   bucket: string;
 }
 
-export class S3HealthResponseDto {
+export class S3HealthResponseDto implements S3HealthResponseProps {
   @ApiProperty({ example: 'ok' })
   public readonly status!: string;
 

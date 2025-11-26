@@ -7,7 +7,7 @@ export interface HealthResponseProps {
   version: string;
 }
 
-export class HealthResponseDto {
+export class HealthResponseDto implements HealthResponseProps {
   @ApiProperty({ example: 'ok', description: 'Overall health status of the app' })
   public readonly status!: string;
 

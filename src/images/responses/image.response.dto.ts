@@ -10,7 +10,7 @@ export interface ImageResponseProps {
   updatedAt: Date;
 }
 
-export class ImageResponseDto {
+export class ImageResponseDto implements ImageResponseProps {
   @ApiProperty({ example: 'cltxyz123abc' })
   public readonly id!: string;
 

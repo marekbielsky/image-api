@@ -33,7 +33,7 @@ describe('ImagesController', () => {
       mimetype: 'image/png',
     } as Express.Multer.File;
 
-    const dto = new CreateImageDto('Test Image', 800, 600);
+    const dto = new CreateImageDto({ title: 'Test Image', width: 800, height: 600 });
 
     const mockResponse = ImagesMockFactory.getMockImageResponseDto({
       id: 'img-1',

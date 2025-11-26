@@ -5,8 +5,8 @@ import { PrismaModule } from '@app/prisma/prisma.module';
 import { PrismaService } from '@app/prisma/prisma.service';
 
 import { ImagesMockFactory } from '../mocks/images-mock.factory';
-import { CreateImageEntityProps, FindImagesParams } from '../types';
 
+import { CreateImageEntityProps, FindImagesParams } from './types/images.repository.types';
 import { ImagesRepository } from './images.repository';
 
 describe('ImagesRepository', () => {
