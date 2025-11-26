@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import sharp from 'sharp';
-import { CreateImageEntityProps, FindImagesParams, ImagesRepository } from './images.repository';
+import { ImagesRepository } from './images.repository';
 import { CreateImageDto, GetImagesQueryDto } from './dtos';
 import { ImageResponseDto } from './responses';
-import { ImagesMapper } from './images.mapper';
 import { FileUploadService } from '@app/file-upload/file-upload.service';
+import { CreateImageEntityProps, FindImagesParams } from './types';
 
 @Injectable()
 export class ImagesService {
@@ -30,7 +30,7 @@ export class ImagesService {
     };
 
     const entity = await this.imagesRepository.create(createProps);
-    return ImagesMapper.toResponseDto(entity);
+    return new ImageResponseDto(entity);
   }
 
   public async findMany(query: GetImagesQueryDto): Promise<ImageResponseDto[]> {
@@ -44,7 +44,7 @@ export class ImagesService {
     };
 
     const entities = await this.imagesRepository.findMany(params);
-    return ImagesMapper.toResponseDtoList(entities);
+    return entities.map((entity) => new ImageResponseDto(entity));
   }
 
   public async findOne(id: string): Promise<ImageResponseDto> {
@@ -54,7 +54,7 @@ export class ImagesService {
       throw new NotFoundException(`Image with id "${id}" not found.`);
     }
 
-    return ImagesMapper.toResponseDto(entity);
+    return new ImageResponseDto(entity);
   }
 
   public async remove(id: string): Promise<void> {

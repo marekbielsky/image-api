@@ -1,19 +1,7 @@
 import { Image } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/prisma/prisma.service';
-
-export interface CreateImageEntityProps {
-  title: string;
-  url: string;
-  width: number;
-  height: number;
-}
-
-export interface FindImagesParams {
-  title?: string;
-  page: number;
-  limit: number;
-}
+import { CreateImageEntityProps, FindImagesParams } from './types/images.repository.types';
 
 @Injectable()
 export class ImagesRepository {
