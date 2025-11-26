@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { HeadBucketCommand, S3Client } from '@aws-sdk/client-s3';
-import { S3HealthResponseDto } from '@app/s3/types';
+import { S3HealthResponseDto } from 'src/s3/responses';
 
 @Injectable()
 export class S3Service {
