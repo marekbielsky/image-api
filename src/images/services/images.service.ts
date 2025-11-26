@@ -46,6 +46,11 @@ export class ImagesService {
     };
 
     const entities = await this.imagesRepository.findMany(params);
+
+    if (!entities.length) {
+      return [];
+    }
+
     return entities.map((entity) => new ImageResponseDto(entity));
   }
 
