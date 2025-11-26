@@ -21,5 +21,16 @@ services:
     ports:
       - '8080:8080'
 
+  api:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://postgres:postgres@db:5432/images
+    ports:
+      - '3000:3000'
+
 volumes:
   db_data:
