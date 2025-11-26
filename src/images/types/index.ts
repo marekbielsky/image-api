@@ -1,1 +1,1 @@
-export * from './images.repository.types';
+export * from '../repositories/types/images.repository.types';
