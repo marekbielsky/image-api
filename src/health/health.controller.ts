@@ -4,7 +4,7 @@ import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { HealthResponseDto } from './responses';
 
 @ApiTags('/health')
-@Controller('/health')
+@Controller({ path: '/health', version: '1' })
 export class HealthController {
   @Get('/')
   @ApiOkResponse({ type: HealthResponseDto })

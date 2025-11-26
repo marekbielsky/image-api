@@ -16,7 +16,7 @@ import { ImageResponseDto } from '../responses';
 import { ImagesService } from '../services/images.service';
 
 @ApiTags('/images')
-@Controller('/images')
+@Controller({ path: '/images', version: '1' })
 export class ImagesController {
   public constructor(private readonly imagesService: ImagesService) {}
 

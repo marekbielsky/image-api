@@ -5,7 +5,7 @@ import { S3HealthResponseDto } from '../responses';
 import { S3Service } from '../services/s3.service';
 
 @ApiTags('/s3')
-@Controller('/s3')
+@Controller({ path: '/s3', version: '1' })
 export class S3Controller {
   public constructor(private readonly s3Service: S3Service) {}
 
