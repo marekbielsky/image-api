@@ -1,10 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { Image } from '@prisma/client';
 
-import { ImagesMockFactory } from '@app/images/mocks/images-mock.factory';
 import { PrismaModule } from '@app/prisma/prisma.module';
 import { PrismaService } from '@app/prisma/prisma.service';
 
+import { ImagesMockFactory } from '../mocks/images-mock.factory';
 import { CreateImageEntityProps, FindImagesParams } from '../types';
 
 import { ImagesRepository } from './images.repository';
@@ -64,16 +64,10 @@ describe('ImagesRepository', () => {
 
   describe('findMany', () => {
     it('should query images without title filter using pagination', async () => {
-      const params: FindImagesParams = {
-        title: undefined,
-        page: 2,
-        limit: 5,
-      };
+      const params: FindImagesParams = { title: undefined, page: 2, limit: 5 };
+      const mockEntity = ImagesMockFactory.getMockEntity();
 
-      const mockImageEntity = ImagesMockFactory.getMockEntity();
-      const mockImageEntities = [mockImageEntity];
-
-      jest.spyOn(prismaService.image, 'findMany').mockResolvedValue(mockImageEntities);
+      jest.spyOn(prismaService.image, 'findMany').mockResolvedValue([mockEntity]);
 
       const result = await imagesRepository.findMany(params);
 
@@ -84,19 +78,14 @@ describe('ImagesRepository', () => {
         take: params.limit,
       });
 
-      expect(result).toEqual(mockImageEntities);
+      expect(result).toEqual([mockEntity]);
     });
 
     it('should query images with title filter and pagination', async () => {
-      const params: FindImagesParams = {
-        title: 'sun',
-        page: 1,
-        limit: 10,
-      };
+      const params: FindImagesParams = { title: 'sun', page: 1, limit: 10 };
+      const mockImages: Image[] = [];
 
-      const mockImageEntities: Image[] = [];
-
-      jest.spyOn(prismaService.image, 'findMany').mockResolvedValue(mockImageEntities);
+      jest.spyOn(prismaService.image, 'findMany').mockResolvedValue(mockImages);
 
       const result = await imagesRepository.findMany(params);
 
@@ -112,26 +101,26 @@ describe('ImagesRepository', () => {
         take: 10,
       });
 
-      expect(result).toEqual(mockImageEntities);
+      expect(result).toEqual(mockImages);
     });
   });
 
   describe('findById', () => {
     it('should return image when found', async () => {
-      const mockImageEntity = ImagesMockFactory.getMockEntity({
+      const mockEntity = ImagesMockFactory.getMockEntity({
         id: '123',
         title: 'Found',
         url: 'https://example.com/found.jpg',
       });
 
-      jest.spyOn(prismaService.image, 'findUnique').mockResolvedValue(mockImageEntity);
+      jest.spyOn(prismaService.image, 'findUnique').mockResolvedValue(mockEntity);
 
       const result = await imagesRepository.findById('123');
 
       expect(prismaService.image.findUnique).toHaveBeenCalledWith({
         where: { id: '123' },
       });
-      expect(result).toEqual(mockImageEntity);
+      expect(result).toEqual(mockEntity);
     });
 
     it('should return null when image not found', async () => {
