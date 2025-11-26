@@ -1,6 +1,6 @@
 {
   "name": "image-api",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "NestJS-based REST API for uploading, resizing, and serving images via AWS S3.",
   "author": "Marek Bielsky <https://github.com/marekbielsky>",
   "private": true,
