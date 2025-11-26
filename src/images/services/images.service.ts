@@ -88,9 +88,7 @@ export class ImagesService {
     file: Express.Multer.File,
     dto: CreateImageDto,
   ): Promise<ImageEncodingResult> {
-    let image = sharp(file.buffer).rotate();
-
-    image = image.resize(dto.width, dto.height, {
+    const image = sharp(file.buffer).rotate().resize(dto.width, dto.height, {
       fit: 'cover',
       position: 'attention',
     });
