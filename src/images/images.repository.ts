@@ -1,13 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Image } from '@prisma/client';
-import { CreateImageDto } from './dtos';
+
+export interface CreateImageEntityProps {
+  title: string;
+  url: string;
+  width: number;
+  height: number;
+}
 
 @Injectable()
 export class ImagesRepository {
   public constructor(private readonly prisma: PrismaService) {}
 
-  public async create(data: CreateImageDto): Promise<Image> {
+  public async create(data: CreateImageEntityProps): Promise<Image> {
     return this.prisma.image.create({
       data: {
         title: data.title,

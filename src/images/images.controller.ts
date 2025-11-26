@@ -1,8 +1,17 @@
-import { Controller, Get, Param, Post, Body, Delete } from '@nestjs/common';
-import { ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Param, Post, Body, Delete, UseInterceptors } from '@nestjs/common';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ImagesService } from './images.service';
 import { ImageResponseDto } from './responses';
 import { CreateImageDto } from './dtos';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiImageFile, ImageFile } from '@app/common';
 
 @ApiTags('/images')
 @Controller('/images')
@@ -10,9 +19,28 @@ export class ImagesController {
   public constructor(private readonly imagesService: ImagesService) {}
 
   @Post('/')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiImageFile('file')
+  @ApiBody({
+    description: 'Upload and resize an image',
+    schema: {
+      type: 'object',
+      properties: {
+        file: { type: 'string', format: 'binary' },
+        title: { type: 'string' },
+        width: { type: 'integer', format: 'int32' },
+        height: { type: 'integer', format: 'int32' },
+      },
+      required: ['file', 'title', 'width', 'height'],
+    },
+  })
   @ApiCreatedResponse({ type: ImageResponseDto })
-  public async create(@Body() body: CreateImageDto): Promise<ImageResponseDto> {
-    return this.imagesService.create(body);
+  public async create(
+    @ImageFile() file: Express.Multer.File,
+    @Body() body: CreateImageDto,
+  ): Promise<ImageResponseDto> {
+    return this.imagesService.create(file, body);
   }
 
   @Get('/')
