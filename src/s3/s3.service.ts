@@ -1,6 +1,8 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
-import { HeadBucketCommand, S3Client } from '@aws-sdk/client-s3';
+import { HeadBucketCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { S3HealthResponseDto } from 'src/s3/responses';
+import { randomUUID } from 'crypto';
+import { S3UploadOptions, S3UploadResult } from '@app/s3/types';
 
 @Injectable()
 export class S3Service {
@@ -59,6 +61,46 @@ export class S3Service {
       throw new InternalServerErrorException(
         'Cannot access S3 bucket. Check AWS credentials, region, and bucket name.',
       );
+    }
+  }
+
+  public async uploadObject(options: S3UploadOptions): Promise<S3UploadResult> {
+    const { fileBuffer, contentType, keyPrefix = 'uploads' } = options;
+    const key = `${keyPrefix}/${randomUUID()}`;
+
+    try {
+      await this.s3.send(
+        new PutObjectCommand({
+          Bucket: this.bucket,
+          Key: key,
+          Body: fileBuffer,
+          ContentType: contentType,
+        }),
+      );
+
+      const region = process.env.AWS_REGION;
+      const url = `https://${this.bucket}.s3.${region}.amazonaws.com/${key}`;
+
+      return {
+        key,
+        url,
+        bucket: this.bucket,
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        this.logger.error(
+          `Failed to upload object to bucket "${this.bucket}": ${error.message}`,
+          error.stack,
+        );
+      } else {
+        this.logger.error(
+          `Failed to upload object to bucket "${this.bucket}" (non-Error): ${JSON.stringify(
+            error,
+          )}`,
+        );
+      }
+
+      throw new InternalServerErrorException('Failed to upload file to S3.');
     }
   }
 }
