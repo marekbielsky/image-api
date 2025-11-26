@@ -41,8 +41,4 @@ export class ImagesRepository {
       where: { id },
     });
   }
-
-  public async deleteById(id: string): Promise<void> {
-    await this.prisma.image.delete({ where: { id } });
-  }
 }

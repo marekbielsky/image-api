@@ -55,10 +55,4 @@ export class ImagesController {
   public async findOne(@Param('id') id: string): Promise<ImageResponseDto> {
     return this.imagesService.findOne(id);
   }
-
-  @Delete('/:id')
-  @ApiOkResponse({ description: 'Image successfully deleted' })
-  public async remove(@Param('id') id: string): Promise<void> {
-    return this.imagesService.remove(id);
-  }
 }

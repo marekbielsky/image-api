@@ -56,8 +56,4 @@ export class ImagesService {
 
     return new ImageResponseDto(entity);
   }
-
-  public async remove(id: string): Promise<void> {
-    await this.imagesRepository.deleteById(id);
-  }
 }
