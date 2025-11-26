@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { HeadBucketCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { S3HealthResponseDto } from 'src/s3/responses';
 import { randomUUID } from 'crypto';
+import { S3HealthResponseDto } from 'src/s3/responses';
 import { S3UploadOptions, S3UploadResult } from '@app/s3/types';
 
 @Injectable()
@@ -43,22 +43,12 @@ export class S3Service {
   public async checkConnection(): Promise<S3HealthResponseDto> {
     try {
       await this.s3.send(new HeadBucketCommand({ Bucket: this.bucket }));
-      return { status: 'ok', bucket: this.bucket };
-    } catch (error) {
-      if (error instanceof Error) {
-        this.logger.error(
-          `Failed to access S3 bucket "${this.bucket}": ${error.message}`,
-          error.stack,
-        );
-      } else {
-        this.logger.error(
-          `Failed to access S3 bucket "${this.bucket}" (non-Error thrown): ${JSON.stringify(
-            error,
-          )}`,
-        );
-      }
 
-      throw new InternalServerErrorException(
+      return new S3HealthResponseDto('ok', this.bucket);
+    } catch (error) {
+      this.handleError(
+        error,
+        'Failed to access S3 bucket',
         'Cannot access S3 bucket. Check AWS credentials, region, and bucket name.',
       );
     }
@@ -81,26 +71,21 @@ export class S3Service {
       const region = process.env.AWS_REGION;
       const url = `https://${this.bucket}.s3.${region}.amazonaws.com/${key}`;
 
-      return {
-        key,
-        url,
-        bucket: this.bucket,
-      };
+      return { key, url, bucket: this.bucket };
     } catch (error) {
-      if (error instanceof Error) {
-        this.logger.error(
-          `Failed to upload object to bucket "${this.bucket}": ${error.message}`,
-          error.stack,
-        );
-      } else {
-        this.logger.error(
-          `Failed to upload object to bucket "${this.bucket}" (non-Error): ${JSON.stringify(
-            error,
-          )}`,
-        );
-      }
-
-      throw new InternalServerErrorException('Failed to upload file to S3.');
+      this.handleError(error, 'Failed to upload object to S3', 'Failed to upload file to S3.');
     }
+  }
+
+  private handleError(error: unknown, logMessage: string, clientMessage: string): never {
+    if (error instanceof Error) {
+      this.logger.error(`${logMessage} (bucket="${this.bucket}"): ${error.message}`, error.stack);
+    } else {
+      this.logger.error(
+        `${logMessage} (bucket="${this.bucket}", non-Error): ${JSON.stringify(error)}`,
+      );
+    }
+
+    throw new InternalServerErrorException(clientMessage);
   }
 }
