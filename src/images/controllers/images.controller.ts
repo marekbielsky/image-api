@@ -1,15 +1,8 @@
 import { Body, Controller, Get, Param, Post, Query, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import {
-  ApiBody,
-  ApiConsumes,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
-import { ApiImageFile, ImageFile } from '@app/common';
+import { ApiUploadImage, ImageFile } from '@app/common';
 
 import { CreateImageDto, GetImagesQueryDto } from '../dtos';
 import { ImageResponseDto } from '../responses';
@@ -22,21 +15,7 @@ export class ImagesController {
 
   @Post('/')
   @UseInterceptors(FileInterceptor('file'))
-  @ApiConsumes('multipart/form-data')
-  @ApiImageFile('file')
-  @ApiBody({
-    description: 'Upload and resize an image',
-    schema: {
-      type: 'object',
-      properties: {
-        file: { type: 'string', format: 'binary' },
-        title: { type: 'string' },
-        width: { type: 'integer', format: 'int32' },
-        height: { type: 'integer', format: 'int32' },
-      },
-      required: ['file', 'title', 'width', 'height'],
-    },
-  })
+  @ApiUploadImage(ImageResponseDto)
   @ApiCreatedResponse({ type: ImageResponseDto })
   public async create(
     @ImageFile() file: Express.Multer.File,
