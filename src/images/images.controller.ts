@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Delete, UseInterceptors, Query } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, UseInterceptors, Query } from '@nestjs/common';
 import {
   ApiBody,
   ApiConsumes,

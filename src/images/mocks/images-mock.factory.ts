@@ -1,4 +1,5 @@
 import { Image } from '@prisma/client';
+import { ImageResponseDto } from '../responses';
 
 const defaultMockImageEntity: Image = {
   id: '1',
@@ -16,5 +17,9 @@ export class ImagesMockFactory {
       ...defaultMockImageEntity,
       ...props,
     };
+  }
+
+  public static getMockImageResponseDto(props: Partial<ImageResponseDto> = {}): ImageResponseDto {
+    return new ImageResponseDto({ ...defaultMockImageEntity, ...props });
   }
 }
