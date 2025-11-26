@@ -2,10 +2,12 @@ import { Test } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { ImagesService } from './images.service';
 import { FileUploadService } from '../file-upload/file-upload.service';
-import { Image } from '@prisma/client';
 import { ImagesRepository } from '@app/images/images.repository';
 import { CreateImageDto, GetImagesQueryDto } from './dtos';
 import { ImageResponseProps } from './responses';
+import { ImagesMockFactory } from './mocks/images-mock.factory';
+import { PrismaModule } from '@app/prisma/prisma.module';
+import { S3Module } from '@app/s3/s3.module';
 
 jest.mock('sharp', () => {
   const sharpMock = jest.fn(() => ({
@@ -26,29 +28,13 @@ describe('ImagesService', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [
-        ImagesService,
-        {
-          provide: ImagesRepository,
-          useValue: {
-            create: jest.fn(),
-            findMany: jest.fn(),
-            findById: jest.fn(),
-            deleteById: jest.fn(),
-          },
-        },
-        {
-          provide: FileUploadService,
-          useValue: {
-            uploadImageFromBuffer: jest.fn(),
-          },
-        },
-      ],
+      imports: [PrismaModule, S3Module],
+      providers: [ImagesService, ImagesRepository, FileUploadService],
     }).compile();
 
-    imagesService = moduleRef.get(ImagesService);
-    imagesRepository = moduleRef.get(ImagesRepository);
-    fileUploadService = moduleRef.get(FileUploadService);
+    imagesService = moduleRef.get<ImagesService>(ImagesService);
+    imagesRepository = moduleRef.get<ImagesRepository>(ImagesRepository);
+    fileUploadService = moduleRef.get<FileUploadService>(FileUploadService);
   });
 
   describe('create', () => {
@@ -64,7 +50,7 @@ describe('ImagesService', () => {
 
       const dto = new CreateImageDto(title, width, height);
 
-      (fileUploadService.uploadImageFromBuffer as jest.Mock).mockResolvedValue({
+      jest.spyOn(fileUploadService, 'uploadImageFromBuffer').mockResolvedValue({
         key: 'images/test-key',
         url: 'https://bucket.s3.region.amazonaws.com/images/test-key',
         bucket: 'bucket',
@@ -73,7 +59,7 @@ describe('ImagesService', () => {
       const createdAt = new Date('2025-01-01T00:00:00.000Z');
       const updatedAt = new Date('2025-01-01T00:00:00.000Z');
 
-      const entity: Image = {
+      const mockImageEntity = ImagesMockFactory.getMockEntity({
         id: 'image-id',
         title: dto.title,
         url: 'https://bucket.s3.region.amazonaws.com/images/test-key',
@@ -81,9 +67,9 @@ describe('ImagesService', () => {
         height: dto.height,
         createdAt,
         updatedAt,
-      };
+      });
 
-      (imagesRepository.create as jest.Mock).mockResolvedValue(entity);
+      jest.spyOn(imagesRepository, 'create').mockResolvedValue(mockImageEntity);
 
       const result = await imagesService.create(file, dto);
 
@@ -96,7 +82,7 @@ describe('ImagesService', () => {
 
       expect(imagesRepository.create).toHaveBeenCalledWith({
         title: dto.title,
-        url: entity.url,
+        url: mockImageEntity.url,
         width: dto.width,
         height: dto.height,
       });
@@ -104,7 +90,7 @@ describe('ImagesService', () => {
       expect(result).toEqual({
         id: 'image-id',
         title: dto.title,
-        url: entity.url,
+        url: mockImageEntity.url,
         width: dto.width,
         height: dto.height,
         createdAt,
@@ -115,21 +101,12 @@ describe('ImagesService', () => {
 
   describe('findMany', () => {
     it('should use default pagination when no page/limit provided', async () => {
-      const query = new GetImagesQueryDto(); // no values set
+      const query = new GetImagesQueryDto();
 
-      const imageEntities: Image[] = [
-        {
-          id: '1',
-          title: 'First',
-          url: 'https://example.com/1.jpg',
-          width: 800,
-          height: 600,
-          createdAt: new Date('2025-01-01T00:00:00.000Z'),
-          updatedAt: new Date('2025-01-01T00:00:00.000Z'),
-        },
-      ];
+      const mockImageEntity = ImagesMockFactory.getMockEntity();
+      const mockImageEntities = [mockImageEntity];
 
-      (imagesRepository.findMany as jest.Mock).mockResolvedValue(imageEntities);
+      jest.spyOn(imagesRepository, 'findMany').mockResolvedValue(mockImageEntities);
 
       const result = await imagesService.findMany(query);
 
@@ -150,19 +127,15 @@ describe('ImagesService', () => {
       query.page = 2;
       query.limit = 5;
 
-      const imageEntities: Image[] = [
-        {
-          id: '2',
-          title: 'Funny cat',
-          url: 'https://example.com/2.jpg',
-          width: 800,
-          height: 600,
-          createdAt: new Date('2025-01-01T00:00:00.000Z'),
-          updatedAt: new Date('2025-01-01T00:00:00.000Z'),
-        },
-      ];
+      const mockImageEntity = ImagesMockFactory.getMockEntity({
+        id: '2',
+        title: 'Funny cat',
+        url: 'https://example.com/2.jpg',
+      });
 
-      (imagesRepository.findMany as jest.Mock).mockResolvedValue(imageEntities);
+      const mockImageEntities = [mockImageEntity];
+
+      jest.spyOn(imagesRepository, 'findMany').mockResolvedValue(mockImageEntities);
 
       const result = await imagesService.findMany(query);
 
@@ -180,17 +153,13 @@ describe('ImagesService', () => {
 
   describe('findOne', () => {
     it('should return mapped image when found', async () => {
-      const entity: Image = {
+      const mockImageEntity = ImagesMockFactory.getMockEntity({
         id: '123',
         title: 'Test',
         url: 'https://example.com/img.jpg',
-        width: 800,
-        height: 600,
-        createdAt: new Date('2025-01-01T00:00:00.000Z'),
-        updatedAt: new Date('2025-01-01T00:00:00.000Z'),
-      };
+      });
 
-      (imagesRepository.findById as jest.Mock).mockResolvedValue(entity);
+      jest.spyOn(imagesRepository, 'findById').mockResolvedValue(mockImageEntity);
 
       const result = await imagesService.findOne('123');
 
@@ -200,7 +169,7 @@ describe('ImagesService', () => {
     });
 
     it('should throw NotFoundException when image does not exist', async () => {
-      (imagesRepository.findById as jest.Mock).mockResolvedValue(null);
+      jest.spyOn(imagesRepository, 'findById').mockResolvedValue(null);
 
       await expect(imagesService.findOne('missing-id')).rejects.toBeInstanceOf(NotFoundException);
     });
@@ -208,7 +177,7 @@ describe('ImagesService', () => {
 
   describe('remove', () => {
     it('should delegate deletion to repository', async () => {
-      (imagesRepository.deleteById as jest.Mock).mockResolvedValue(undefined);
+      jest.spyOn(imagesRepository, 'deleteById').mockResolvedValue(undefined);
 
       await imagesService.remove('to-delete');
 
